@@ -1,10 +1,186 @@
 #include <Application.h>
+#include <bobcat_ui/dropdown.h>
+#include <fstream>
+#include <sstream>
 
 using namespace bobcat;
+using namespace std;
 
-Application::Application() {
+void Application::initData() {
+    cout << "init Data start." << endl;
+    fstream file;
+
+    // read vertices from file
+    file.open("./flights/vertices.csv", ios::in);
+    if (file.is_open()) {
+        cout << "File open" << endl;
+        string line;
+        
+        while(getline(file, line)) {
+            cities.append(new Vertex(line));
+            cout << line << endl;
+        }
+
+        file.close();
+    } else {
+        cout << "file did not open" << endl;
+    }
+
+    // add vertices to graph
+    for (int i = 0; i < cities.size(); i++) {
+        g.addVertex(cities[i]);
+    }
+    
+    // read edges from file and add them as edges to the graph
+    cout << "starting edges." << endl;
+    file.open("./flights/edges.csv", ios::in);
+    if (file.is_open()) {
+        string line;
+        
+        while(getline(file, line)) {
+            stringstream ss(line);
+            string from, to, time, cost;
+
+            getline(ss, from, ',');
+            getline(ss, to, ',');
+            getline(ss, time, ',');
+            getline(ss, cost, ',');
+
+            g.addEdge(cities[stoi(from)], cities[stoi(to)], stoi(time), stoi(cost));
+        }
+
+        file.close();
+    } else {
+        cout << "edges did not open." << endl;
+    }
+}
+
+void Application::initInterface() {
     window = new Window(25, 75, 400, 400, "Simple Navigation Project");
 
+    fromDropdown = new Dropdown(25, 25, 350, 25, "Origin");
+    toDropdown = new Dropdown(25, 75, 350, 25, "Destination");
+    method = new Dropdown(25, 125, 350, 25, "Method");
+    
+    //adding methods to method dropdown
+    method->add("UCS Shortest Travel Time");
+    method->add("UCS Cheapest Price");
+    method->add("BFS Least Number of Stops");
+
+    for (int i = 0; i < cities.size(); i++) {
+        fromDropdown->add(cities[i]->data);
+        toDropdown->add(cities[i]->data);
+    }
+
+    searchButton = new Button(25, 175, 350, 25, "Search");
+
+    resultScrollArea = new Fl_Scroll(25, 225, 350, 150, "Results");
+    resultScrollArea->align(FL_ALIGN_TOP_LEFT);
+    resultScrollArea->box(FL_THIN_UP_BOX);
+
+    // register events
+    ON_CLICK(searchButton, Application::onClick);
 
     window->show();
+}
+
+void Application::onClick(bobcat::Widget* sender) {
+    if (sender == searchButton) {
+
+        resultScrollArea->clear();
+
+        int fromIndex = fromDropdown->value();
+        int toIndex = toDropdown->value();
+        string searchMethod = method->text();
+        cout << "searchMethod: " << searchMethod << endl;
+
+        // run search algorithm
+        if (searchMethod == "UCS Shortest Travel Time") {
+            Waypoint* path = g.ucs(cities[fromIndex], cities[toIndex], "travel");
+
+            if (path) {
+                cout << "Found path" << endl;
+                int y = resultScrollArea->y() + 10;
+
+                Waypoint* temp = path;
+
+                while(temp != nullptr) {
+                    resultScrollArea->add(new TextBox(40, y, 300, 25, temp->vertex->data));
+
+                    y += 40;
+
+                    if (temp->parent != nullptr) {
+                        resultScrollArea->add(new TextBox(40, y, 300, 25, "\t Flight Time: " + to_string(temp->weight) + " hours"));
+                        y += 40;
+                    }
+                    temp = temp->parent;
+                }
+                
+
+                window->redraw();
+
+            } else {
+                cout << "There is no path" << endl;
+            }
+        } else if (searchMethod == "UCS Cheapest Price") {
+            Waypoint* path = g.ucs(cities[fromIndex], cities[toIndex], "price");
+
+            if (path) {
+                cout << "Found path" << endl;
+                int y = resultScrollArea->y() + 10;
+
+                Waypoint* temp = path;
+
+                while(temp != nullptr) {
+                    resultScrollArea->add(new TextBox(40, y, 300, 25, temp->vertex->data));
+
+                    y += 40;
+
+                    if (temp->parent != nullptr) {
+                        resultScrollArea->add(new TextBox(40, y, 300, 25, "\t Price: " + to_string(temp->price) + " dollars"));
+                        y += 40;
+                    }
+                    temp = temp->parent;
+                }
+                
+
+                window->redraw();
+
+            } else {
+                cout << "There is no path" << endl;
+            }
+        } else if (searchMethod == "BFS Least Number of Stops") {
+            Waypoint* path = g.bfs(cities[fromIndex], cities[toIndex]);
+
+            if (path) {
+                cout << "Found path" << endl;
+                int y = resultScrollArea->y() + 10;
+
+                Waypoint* temp = path;
+
+                while(temp != nullptr) {
+                    resultScrollArea->add(new TextBox(40, y, 300, 25, temp->vertex->data));
+
+                    y += 40;
+
+                    //if (temp->parent != nullptr) {
+                    //    resultScrollArea->add(new TextBox(40, y, 300, 25, "\t Flight Time:" + to_string(temp->weight) + " hours"));
+                    //    y += 40;
+                    //}
+                    temp = temp->parent;
+                }
+                
+
+                window->redraw();
+
+            } else {
+                cout << "There is no path" << endl;
+            }
+        }
+    }
+}
+
+Application::Application() {
+    initData();
+    initInterface();
 }
