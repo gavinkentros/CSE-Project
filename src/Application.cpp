@@ -29,6 +29,7 @@ void Application::initData() {
     // add vertices to graph
     for (int i = 0; i < cities.size(); i++) {
         g.addVertex(cities[i]);
+        //canvas->vg->addVertex(new VisualVertex(cities[i]));
     }
     
     // read edges from file and add them as edges to the graph
@@ -47,6 +48,7 @@ void Application::initData() {
             getline(ss, cost, ',');
 
             g.addEdge(cities[stoi(from)], cities[stoi(to)], stoi(time), stoi(cost));
+            //canvas->vg->addEdge(stoi(from), stoi(to));
         }
 
         file.close();
@@ -56,11 +58,13 @@ void Application::initData() {
 }
 
 void Application::initInterface() {
-    window = new Window(25, 75, 400, 400, "Simple Navigation Project");
 
     fromDropdown = new Dropdown(25, 25, 350, 25, "Origin");
     toDropdown = new Dropdown(25, 75, 350, 25, "Destination");
     method = new Dropdown(25, 125, 350, 25, "Method");
+
+    //canvas->vg->updateVertexPositions();
+    //canvas->redraw();
     
     //adding methods to method dropdown
     method->add("UCS Shortest Travel Time");
@@ -99,6 +103,9 @@ void Application::onClick(bobcat::Widget* sender) {
             Waypoint* path = g.ucs(cities[fromIndex], cities[toIndex], "travel");
 
             if (path) {
+
+                // canvas->vg->updatePath(path);
+                // canvas->redraw();
                 cout << "Found path" << endl;
                 int y = resultScrollArea->y() + 10;
 
@@ -181,6 +188,8 @@ void Application::onClick(bobcat::Widget* sender) {
 }
 
 Application::Application() {
+    window = new Window(25, 75, 400, 400, "Simple Navigation Project");
+    // canvas = new Canvas(400, 400, 200, 200); // (x, y, w, h) (will be circle around center of canvas)
     initData();
     initInterface();
 }
