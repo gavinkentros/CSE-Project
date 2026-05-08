@@ -128,6 +128,8 @@ void Application::onClick(bobcat::Widget* sender) {
 
             } else {
                 cout << "There is no path" << endl;
+                // canvas->vg->deselectAllEdges();
+                // canvas->redraw();
             }
         } else if (searchMethod == "UCS Cheapest Price") {
             Waypoint* path = g.ucs(cities[fromIndex], cities[toIndex], "price");
