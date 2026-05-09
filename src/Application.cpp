@@ -127,6 +127,8 @@ void Application::onClick(bobcat::Widget* sender) {
 
                 window->redraw();
 
+                deletePath(path);
+
             } else {
                 cout << "There is no path" << endl;
                 // canvas->vg->deselectAllEdges();
@@ -157,6 +159,8 @@ void Application::onClick(bobcat::Widget* sender) {
 
                 window->redraw();
 
+                deletePath(path);
+
             } else {
                 cout << "There is no path" << endl;
             }
@@ -185,6 +189,8 @@ void Application::onClick(bobcat::Widget* sender) {
 
                 window->redraw();
 
+                deletePath(path);
+
             } else {
                 cout << "There is no path" << endl;
             }
@@ -207,6 +213,15 @@ void Application::addSummary(Waypoint* path, int& y) {
     y += 40;
     resultScrollArea->add(new TextBox(40, y, 300, 25, "Stops: " + to_string(stops)));
     y += 40;
+}
+
+void Application::deletePath(Waypoint* path) {
+    if (!path) return;
+    Waypoint* root = path;
+    while (root->parent != nullptr) {
+        root = root->parent;
+    }
+    delete root;
 }
 
 Application::Application() {
