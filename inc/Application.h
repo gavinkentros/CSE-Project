@@ -5,9 +5,11 @@
 #include <FL/Fl_Scroll.H>
 #include <Graph.h>
 #include <ArrayList.h>
+#include <Canvas.h>
 
 class Application : public bobcat::Application_ {
     bobcat::Window* window;
+    Canvas* canvas;
 
     ArrayList<Vertex*> cities;
     Graph g;

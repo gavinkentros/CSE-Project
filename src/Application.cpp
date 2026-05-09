@@ -29,7 +29,7 @@ void Application::initData() {
     // add vertices to graph
     for (int i = 0; i < cities.size(); i++) {
         g.addVertex(cities[i]);
-        //canvas->vg->addVertex(new VisualVertex(cities[i]));
+        canvas->vg->addVertex(new VisualVertex(cities[i]));
     }
     
     // read edges from file and add them as edges to the graph
@@ -48,7 +48,7 @@ void Application::initData() {
             getline(ss, cost, ',');
 
             g.addEdge(cities[stoi(from)], cities[stoi(to)], stoi(time), stoi(cost));
-            //canvas->vg->addEdge(stoi(from), stoi(to));
+            canvas->vg->addEdge(stoi(from), stoi(to));
         }
 
         file.close();
@@ -63,9 +63,9 @@ void Application::initInterface() {
     toDropdown = new Dropdown(25, 75, 350, 25, "Destination");
     method = new Dropdown(25, 125, 350, 25, "Method");
 
-    //canvas->vg->updateVertexPositions();
-    //canvas->redraw();
-    
+    canvas->vg->updateVertexPositions();
+    canvas->redraw();
+
     //adding methods to method dropdown
     method->add("UCS Shortest Travel Time");
     method->add("UCS Cheapest Price");
@@ -104,8 +104,8 @@ void Application::onClick(bobcat::Widget* sender) {
 
             if (path) {
 
-                // canvas->vg->updatePath(path);
-                // canvas->redraw();
+                canvas->vg->updatePath(path);
+                canvas->redraw();
                 cout << "Found path" << endl;
                 int y = resultScrollArea->y() + 10;
 
@@ -131,13 +131,15 @@ void Application::onClick(bobcat::Widget* sender) {
 
             } else {
                 cout << "There is no path" << endl;
-                // canvas->vg->deselectAllEdges();
-                // canvas->redraw();
+                canvas->vg->deselectAllEdges();
+                canvas->redraw();
             }
         } else if (searchMethod == "UCS Cheapest Price") {
             Waypoint* path = g.ucs(cities[fromIndex], cities[toIndex], "price");
 
             if (path) {
+                canvas->vg->updatePath(path);
+                canvas->redraw();
                 cout << "Found path" << endl;
                 int y = resultScrollArea->y() + 10;
 
@@ -163,11 +165,15 @@ void Application::onClick(bobcat::Widget* sender) {
 
             } else {
                 cout << "There is no path" << endl;
+                canvas->vg->deselectAllEdges();
+                canvas->redraw();
             }
         } else if (searchMethod == "BFS Least Number of Stops") {
             Waypoint* path = g.bfs(cities[fromIndex], cities[toIndex]);
 
             if (path) {
+                canvas->vg->updatePath(path);
+                canvas->redraw();
                 cout << "Found path" << endl;
                 int y = resultScrollArea->y() + 10;
 
@@ -193,6 +199,8 @@ void Application::onClick(bobcat::Widget* sender) {
 
             } else {
                 cout << "There is no path" << endl;
+                canvas->vg->deselectAllEdges();
+                canvas->redraw();
             }
         }
     }
@@ -225,8 +233,8 @@ void Application::deletePath(Waypoint* path) {
 }
 
 Application::Application() {
-    window = new Window(25, 75, 400, 400, "Simple Navigation Project");
-    // canvas = new Canvas(400, 400, 200, 200); // (x, y, w, h) (will be circle around center of canvas)
+    window = new Window(25, 75, 700, 400, "Simple Navigation Project");
+    canvas = new Canvas(420, 25, 260, 360);
     initData();
     initInterface();
 }
