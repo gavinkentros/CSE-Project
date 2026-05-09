@@ -21,6 +21,7 @@ class Application : public bobcat::Application_ {
     void initData();
     void initInterface();
     void onClick(bobcat::Widget* sender);
+    void addSummary(Waypoint* path, int& y);
 
 public:
     Application();

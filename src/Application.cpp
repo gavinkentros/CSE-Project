@@ -122,7 +122,8 @@ void Application::onClick(bobcat::Widget* sender) {
                     }
                     temp = temp->parent;
                 }
-                
+
+                addSummary(path, y);
 
                 window->redraw();
 
@@ -151,7 +152,8 @@ void Application::onClick(bobcat::Widget* sender) {
                     }
                     temp = temp->parent;
                 }
-                
+
+                addSummary(path, y);
 
                 window->redraw();
 
@@ -178,7 +180,8 @@ void Application::onClick(bobcat::Widget* sender) {
                     //}
                     temp = temp->parent;
                 }
-                
+
+                addSummary(path, y);
 
                 window->redraw();
 
@@ -187,6 +190,23 @@ void Application::onClick(bobcat::Widget* sender) {
             }
         }
     }
+}
+
+void Application::addSummary(Waypoint* path, int& y) {
+    int nodeCount = 0;
+    Waypoint* counter = path;
+    while (counter != nullptr) {
+        nodeCount++;
+        counter = counter->parent;
+    }
+    int stops = (nodeCount >= 2) ? (nodeCount - 2) : 0;
+
+    resultScrollArea->add(new TextBox(40, y, 300, 25, "Total Time: " + to_string(path->partialCost) + " hours"));
+    y += 40;
+    resultScrollArea->add(new TextBox(40, y, 300, 25, "Total Price: $" + to_string(path->partialPrice)));
+    y += 40;
+    resultScrollArea->add(new TextBox(40, y, 300, 25, "Stops: " + to_string(stops)));
+    y += 40;
 }
 
 Application::Application() {
