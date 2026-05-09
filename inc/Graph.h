@@ -16,6 +16,15 @@ struct Vertex {
     ArrayList<Edge *> edgeList;
 
     Vertex(std::string data) { this->data = data; }
+
+    ~Vertex() {
+        for (int i = 0; i < edgeList.size(); i++) {
+            delete edgeList[i];
+        }
+    }
+
+    Vertex(const Vertex&) = delete;
+    Vertex& operator=(const Vertex&) = delete;
 };
 
 inline std::ostream &operator<<(std::ostream &os, Vertex *v) {
@@ -66,18 +75,27 @@ struct Waypoint {
         for (int i = 0; i < vertex->edgeList.size(); i++) {
             Waypoint *temp = new Waypoint(vertex->edgeList[i]->to);
             temp->parent = this;
-            
+
             // Track Travel Time
             temp->weight = vertex->edgeList[i]->weight;
             temp->partialCost = partialCost + vertex->edgeList[i]->weight;
-            
+
             // Track Ticket Price
             temp->price = vertex->edgeList[i]->cost;
             temp->partialPrice = partialPrice + vertex->edgeList[i]->cost;
-            
+
             children.append(temp);
         }
     }
+
+    ~Waypoint() {
+        for (int i = 0; i < children.size(); i++) {
+            delete children[i];
+        }
+    }
+
+    Waypoint(const Waypoint&) = delete;
+    Waypoint& operator=(const Waypoint&) = delete;
 };
 
 inline std::ostream &operator<<(std::ostream &os, Waypoint *wp) {
@@ -93,6 +111,17 @@ inline std::ostream &operator<<(std::ostream &os, Waypoint *wp) {
 
 struct Graph {
     ArrayList<Vertex *> vertices;
+
+    Graph() = default;
+
+    ~Graph() {
+        for (int i = 0; i < vertices.size(); i++) {
+            delete vertices[i];
+        }
+    }
+
+    Graph(const Graph&) = delete;
+    Graph& operator=(const Graph&) = delete;
 
     void addVertex(Vertex *v) { vertices.append(v); }
 
