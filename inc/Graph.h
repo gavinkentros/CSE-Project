@@ -331,11 +331,14 @@ struct Graph {
                                 }
                             }
 
-                            // Replace the worse one with the better one
+                            // Replace the worse one with the better one.
+                            // Don't delete frontier[k] here: the worse Waypoint
+                            // is still owned by its parent's children list and
+                            // will be freed by the cascading ~Waypoint at the
+                            // end of the search.
                             for (int k = 0; k < frontier.size(); k++) {
                                 if (frontier[k]->vertex->data ==
                                     result->children[i]->vertex->data) {
-                                    delete frontier[k];
                                     frontier[k] = result->children[i];
                                     break;
                                 }
@@ -446,11 +449,14 @@ struct Graph {
                                 }
                             }
 
-                            // Replace the worse one with the better one
+                            // Replace the worse one with the better one.
+                            // Don't delete frontier[k] here: the worse Waypoint
+                            // is still owned by its parent's children list and
+                            // will be freed by the cascading ~Waypoint at the
+                            // end of the search.
                             for (int k = 0; k < frontier.size(); k++) {
                                 if (frontier[k]->vertex->data ==
                                     result->children[i]->vertex->data) {
-                                    delete frontier[k];
                                     frontier[k] = result->children[i];
                                     break;
                                 }
