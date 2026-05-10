@@ -233,8 +233,8 @@ void Application::deletePath(Waypoint* path) {
 }
 
 Application::Application() {
-    window = new Window(25, 75, 700, 400, "Simple Navigation Project");
-    canvas = new Canvas(420, 25, 260, 360);
+    window = new Window(25, 75, 850, 400, "Simple Navigation Project");
+    canvas = new Canvas(420, 25, 400, 360);
     initData();
     initInterface();
 }

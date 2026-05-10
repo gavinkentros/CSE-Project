@@ -15,7 +15,7 @@ See VisualGraph.h
 class Canvas : public bobcat::Canvas_ {
 
 public:
-    VisualGraph* vg = new VisualGraph(0, 0, 0.45);
+    VisualGraph* vg = new VisualGraph(0, 0, 0.55);
     Canvas(int x, int y, int w, int h) : Canvas_(x, y, w, h) {}
 
     void render() {
