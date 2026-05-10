@@ -238,3 +238,14 @@ Application::Application() {
     initData();
     initInterface();
 }
+
+Application::~Application() {
+    delete canvas;
+    delete fromDropdown;
+    delete toDropdown;
+    delete method;
+    delete searchButton;
+    delete resultScrollArea;
+    delete window;
+    
+}

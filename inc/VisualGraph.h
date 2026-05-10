@@ -176,6 +176,15 @@ public:
         }
     }
 
+    ~VisualGraph() {
+        for (int i = 0; i < vertices.size(); i++) {
+            delete vertices[i];
+        }
+        for (int i = 0; i < edges.size(); i++) {
+            delete edges[i];
+        }
+    }
+
 };
 
 #endif

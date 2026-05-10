@@ -21,6 +21,10 @@ public:
     void render() {
         vg->draw();
     }
+
+    ~Canvas() {
+        delete vg;
+    }
     
 };
 
