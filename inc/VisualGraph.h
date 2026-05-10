@@ -46,7 +46,13 @@ public:
     glEnd();
 
     gl_font(FL_HELVETICA, 11);
-    gl_draw(vertex->data.c_str(), x + 0.03f, y - 0.015f);
+    const std::string& name = vertex->data;
+    if (x >= 0) {
+        gl_draw(name.c_str(), x + 0.04f, y - 0.015f);
+    } else {
+        float textWidth = name.length() * 0.045f;
+        gl_draw(name.c_str(), x - 0.04f - textWidth, y - 0.015f);
+    }
   }
 
     Vertex* getVertex() {
