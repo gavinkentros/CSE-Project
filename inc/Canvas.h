@@ -19,6 +19,8 @@ public:
     Canvas(int x, int y, int w, int h) : Canvas_(x, y, w, h) {}
 
     void render() {
+        glClearColor(0.86f, 0.86f, 0.86f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
         vg->draw();
     }
 
