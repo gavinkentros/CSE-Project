@@ -15,6 +15,7 @@ in the VisualVertex draw function.
 
 
 #include <FL/fl_draw.H>
+#include <FL/gl.h>
 #include <bobcat_ui/all.h>
 #include <Graph.h>
 
@@ -43,6 +44,9 @@ public:
     glBegin(GL_POINTS);
         glVertex2f(x, y);
     glEnd();
+
+    gl_font(FL_HELVETICA, 11);
+    gl_draw(vertex->data.c_str(), x + 0.03f, y - 0.015f);
   }
 
     Vertex* getVertex() {
