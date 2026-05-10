@@ -45,12 +45,12 @@ public:
         glVertex2f(x, y);
     glEnd();
 
-    gl_font(FL_HELVETICA, 11);
+    gl_font(FL_HELVETICA, 9);
     const std::string& name = vertex->data;
     if (x >= 0) {
         gl_draw(name.c_str(), x + 0.04f, y - 0.015f);
     } else {
-        float textWidth = name.length() * 0.045f;
+        float textWidth = name.length() * 0.04f;
         gl_draw(name.c_str(), x - 0.04f - textWidth, y - 0.015f);
     }
   }
